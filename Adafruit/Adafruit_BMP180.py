@@ -7,7 +7,7 @@ from Adafruit.Adafruit_I2C import Adafruit_I2C
 # BMP085 Class
 # Anpassung des  Print Befehls für Python 3.6
 # Anpassung int() >>
-# kein Anspruch auf Richtigkeit der Änderungen
+# kein Anspruch auf Richtigkeit der Änderungen 
 # ===========================================================================
 
 class BMP085 :

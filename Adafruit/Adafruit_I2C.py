@@ -3,7 +3,7 @@ import re
 import smbus
 
 # ===========================================================================
-# Adafruit_I2C Class
+# Adafruit_I2C Class 
 # Anpassung des Print Befhls für Python 3.6
 # ===========================================================================
 
