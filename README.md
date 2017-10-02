@@ -38,7 +38,7 @@
         - sendet Schlüsselwörter wie DATEN um Daten anzufordern oder AB um die Verbindung zubeenden
 
 
-   Einstellung für I²C in /boot/config.txt:
+ Einstellung für I²C in /boot/config.txt:
                                                                                                      
             initramfs initramfs-linux.img followkernel                                                                        
                                                                                                                   
@@ -48,7 +48,7 @@
             dtparam=i2c1=on                                                                                                   
             dtparam=i2c_arm=on       
    
-    Anpassung unter Arch Linux für I²C:
+ Anpassung unter Arch Linux für I²C:
  
         nano /etc/modules-load.d/raspberrypi.conf
     
