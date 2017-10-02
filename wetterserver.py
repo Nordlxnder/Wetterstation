@@ -26,7 +26,7 @@ import Adafruit_DHT
 
 def sensoren_anfrage():
     sensor=Adafruit_DHT.DHT22
-    pin=4
+    pin=17
 
     # Try to grab a sensor reading.  Use the read_retry method which will retry up
     # to 15 times to get a sensor reading (waiting 2 seconds between each retry). 

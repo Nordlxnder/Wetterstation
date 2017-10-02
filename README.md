@@ -10,6 +10,21 @@
     Hardwarevoraussetzungen:
         Raspberry zero über WLAN mit dem Netzwerk verbunden
         Sensor  DHT 22  mit Pin 4 verbunden
+            Pinbelegung:
+                Sensor          Raspi
+            VCC    1   ----   PIN 17 3.3 V
+            Data   2   ----   PIN 11 GPIO 17   (nicht verwechseln mit PIN 17;)
+            NC     3
+            GND    4   ----   PIN 14 
+
+        Sensor  BMP180
+            Pinbelegung
+                Sensor          Raspi
+            VCC        ----   PIN 1  3.3 V
+            SDA        ----   PIN 3  SDA  
+            SCL        ----   PIN 5  SCL                
+            GND        ----   PIN 6  GND 
+     
 
     Softwarevoraussetzungen:
         Treiber für Sensor installiert Adafruit_Python_DHT
