@@ -38,7 +38,7 @@
         - sendet Schlüsselwörter wie DATEN um Daten anzufordern oder AB um die Verbindung zubeenden
 
 
-   Einstellung für /boot/config.txt:
+   Einstellung für I²C in /boot/config.txt:
                                                                                                      
             initramfs initramfs-linux.img followkernel                                                                        
                                                                                                                   
