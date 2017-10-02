@@ -1,2 +1,4 @@
 test.py
 .idea/
+__pychache__/
+Adafruit_BMP085_example.py
