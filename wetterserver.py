@@ -12,6 +12,7 @@
     Hardwarevoraussetzungen:
             Raspberry zero über WLAN mit dem Netzwerk verbunden
             Sensor  DHT 22  mit Pin 4 verbunden
+
     Softwarevoraussetzungen:
         Treiber für Sensor installiert
         Python 3.6 installiert                
@@ -20,6 +21,26 @@
 
 import socket
 import sys
+import Adafruit_DHT
+    
+
+def sensoren_anfrage():
+    sensor=Adafruit_DHT.DHT22
+    pin=4
+
+    # Try to grab a sensor reading.  Use the read_retry method which will retry up
+    # to 15 times to get a sensor reading (waiting 2 seconds between each retry). 
+    luftfeuchte, temperature = Adafruit_DHT.read_retry(sensor, pin)
+
+    if luftfeuchte is not None and temperature is not None:
+        daten='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(temperature, luftfeuchte)
+        print('Temp={0:0.1f}°C  Humidity={1:0.1f}%'.format(temperature, luftfeuchte))
+    else:
+        daten='Sensoren auslesen ist fehlgeschlagen'
+        print('Failed to get reading. Try again!')
+        #sys.exit(1)
+    return daten
+    pass
 
 def server_starten():
 
@@ -69,7 +90,10 @@ def server_starten():
 
                 # Daten senden wenn danach gefragt wird
                 if anfrage[0:5] =='DATEN':
-                    schnittstelle.sendall(str.encode(" Hier sind die Daten"))
+                    #schnittstelle.sendall(str.encode(" Hier sind die Daten"))
+                    daten=sensoren_anfrage()
+                    schnittstelle.sendall(str.encode(daten))
+
 
                 # Abruch wenn AB gesendet wird vom client
                 if anfrage[0:2] == 'AB':
