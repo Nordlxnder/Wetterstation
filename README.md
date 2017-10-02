@@ -5,7 +5,7 @@
 
      Funktion Wetterstation:
         - auslesen der Temperatur und Luftfeuchte
-        - Server um  die Werte im Netzwerk bereit zustellen
+        - Server um die Werte im Netzwerk bereit zustellen
 
     Hardwarevoraussetzungen:
         Raspberry zero über WLAN mit dem Netzwerk verbunden
@@ -29,10 +29,30 @@
     Softwarevoraussetzungen:
         Treiber für Sensor installiert Adafruit_Python_DHT
         Python 3.6 installiert
+        i2c-tools
 
 
  client_wetter.py
  
     Funktion:
         - sendet Schlüsselwörter wie DATEN um Daten anzufordern oder AB um die Verbindung zubeenden
+
+
+   Einstellung für /boot/config.txt:
+                                                                                                     
+            initramfs initramfs-linux.img followkernel                                                                        
+                                                                                                                  
+            device_tree_param=spi=on                                                                                          
+                                                                                                                  
+            # i2c für Drucksensor BMP180                                                                                      
+            dtparam=i2c1=on                                                                                                   
+            dtparam=i2c_arm=on       
+   
+    Anpassung unter Arch Linux für I²C:
+ 
+        nano /etc/modules-load.d/raspberrypi.conf
+    
+        snd-bcm2835
+        i2c-bcm2708
+        i2c-dev
 
