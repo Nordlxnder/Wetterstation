@@ -41,11 +41,9 @@
  Einstellung für I²C in /boot/config.txt:
                                                                                                      
             initramfs initramfs-linux.img followkernel
-                                                                                            
-            device_tree_param=spi=on                                                        
-                                                                                                                  
-            # i2c für Drucksensor BMP180         
-            dtparam=i2c1=on                                              
+            device_tree_param=spi=on
+            # i2c für Drucksensor BMP180
+            dtparam=i2c1=on
             dtparam=i2c_arm=on
         
  Anpassung unter Arch Linux für I²C:
