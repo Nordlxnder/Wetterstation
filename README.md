@@ -17,5 +17,7 @@
 
 
  client_wetter.py
+ 
+    Funktion:
         - sendet Schlüsselwörter wie DATEN um Daten anzufordern oder AB um die Verbindung zubeenden
 
