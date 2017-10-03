@@ -8,10 +8,10 @@
     |                              |              |                              |
     |                              |              |  Sensoren:                   |
     |------------------------------|              |   DHT22  -> Luftfechte       |
-                                                  |            Temperatur        |
-                                                  |  BMP180 -> Luftdruck         |
-                                                  |            Temperatur        |
-                                                  |            Höhe              |
+                                                  |             Temperatur       |
+                                                  |   BMP180 -> Luftdruck        |
+                                                  |             Temperatur       |
+                                                  |             Höhe             |
                                                   |------------------------------|
 
 
