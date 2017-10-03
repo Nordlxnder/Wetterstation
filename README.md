@@ -1,5 +1,20 @@
 # Wetterstation
 
+ |------------------------------|              |------------------------------|
+ | beliebiger PC im Netzwerk    |              | Raspberry Zero mit Sensoren  |
+ |  als Client                  |              |    als Wetterstation         |
+ |                              |              |                              |
+ |  client_wetter.py            |--------------|  wetterserver.py             |
+ |                              |              |                              |
+ |                              |              |  Sensoren:                   |
+ |------------------------------|              |   DHT22  -> Luftfechte       |
+                                               |            Temperatur        |
+                                               |  BMP180 -> Luftdruck         |
+                                               |            Temperatur        |
+                                               |            Höhe              |
+                                               |------------------------------|
+
+
  wetterserver.py
 
 
