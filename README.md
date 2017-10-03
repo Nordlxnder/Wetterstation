@@ -54,7 +54,9 @@
 
 
  Einstellung für I²C in /boot/config.txt:
-                                                                                                     
+             
+        sudo nano /boot/config.txt
+                                                                                                
             initramfs initramfs-linux.img followkernel
             device_tree_param=spi=on
             # i2c für Drucksensor BMP180
@@ -63,9 +65,23 @@
         
  Anpassung unter Arch Linux für I²C:
  
-        nano /etc/modules-load.d/raspberrypi.conf
+        sudo nano /etc/modules-load.d/raspberrypi.conf
     
         snd-bcm2835
         i2c-bcm2708
         i2c-dev
+
+ Schnittstellenunterstützung I²C für BMP180 imstallieren
+
+    sudo pacman -S i2c-tools
+
+ Treiber für DHT22 installieren
+
+    git clone https://github.com/adafruit/Adafruit_Python_DHT.git
+
+    cd Adafruit_Python_DHT
+
+    sudo python setup.py install
+
+    und wieder ins Projektverzeichnis wechseln
 
