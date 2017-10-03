@@ -5,18 +5,18 @@
 '''
     
     Funktion Wetterstation:
-                  - auslesen der Temperatur und Luftfeuchte
-                  - Server um  die Werte im Netzwerk bereit zustellen
-
-
+                  - auslesen der Temperatur, Luftdruck, Höhe und Luftfeuchte
+                  - Server um die Werte im Netzwerk bereit zustellen
+                 
     Hardwarevoraussetzungen:
             Raspberry zero über WLAN mit dem Netzwerk verbunden
-            Sensor  DHT 22  mit Pin 4 verbunden
+            Sensor  DHT 22  mit Pin 11 GPIO 17 verbunden
+            Sensor  BMP180              
 
     Softwarevoraussetzungen:
         Treiber für Sensor installiert
         Python 3.6 installiert                
-            
+        i2c-tools    
 '''
 
 import socket
@@ -54,11 +54,11 @@ def sensor_BMP180_anfrage():
 
 def sensor_DHT22_anfrage():
     sensor=Adafruit_DHT.DHT22
-    pin=17
+    gpio=17
 
     # Try to grab a sensor reading.  Use the read_retry method which will retry up
     # to 15 times to get a sensor reading (waiting 2 seconds between each retry). 
-    luftfeuchte, temperature = Adafruit_DHT.read_retry(sensor, pin)
+    luftfeuchte, temperature = Adafruit_DHT.read_retry(sensor, gpio)
 
     if luftfeuchte is not None and temperature is not None:
         daten='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(temperature, luftfeuchte)
