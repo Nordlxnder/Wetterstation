@@ -22,9 +22,37 @@
 import socket
 import sys
 import Adafruit_DHT
+from Adafruit.Adafruit_BMP180 import BMP085
     
+def sensor_BMP180_anfrage():
+    # Initialise the BMP085 and use STANDARD mode (default value)
+    # bmp = BMP085(0x77, debug=True)
+    bmp = BMP085(0x77,1)
 
-def sensoren_anfrage():
+    # To specify a different operating mode, uncomment one of the following:
+    # bmp = BMP085(0x77, 0)  # ULTRALOWPOWER Mode
+    # bmp = BMP085(0x77, 1)  # STANDARD Mode
+    # bmp = BMP085(0x77, 2)  # HIRES Mode
+    # bmp = BMP085(0x77, 3)  # ULTRAHIRES Mode
+    
+    # Abfrage der Sensordaten
+    korrekturfaktor_d=1000
+    korrekturfaktor_t=-6    # mein Sensor zeigt 6 Kelvin zuviel an ;)
+    temperatur = bmp.readTemperature()+korrekturfaktor_t
+    luftdruck = bmp.readPressure()+korrekturfaktor_d
+    hoehe = bmp.readAltitude(luftdruck)
+    
+    if luftdruck is not None and temperatur is not None and hoehe is not None:
+        daten='Temperatur={0:0.1f}°C  Luftdruck={1:0.1f}hPa Höhe={2:0.1f}m'.format(temperatur, (luftdruck/100) , hoehe)
+    else:
+        daten='Sensoren auslesen ist fehlgeschlagen'
+        print('Failed to get reading. Try again!')
+        
+    return daten
+
+    pass
+
+def sensor_DHT22_anfrage():
     sensor=Adafruit_DHT.DHT22
     pin=17
 
@@ -91,8 +119,9 @@ def server_starten():
                 # Daten senden wenn danach gefragt wird
                 if anfrage[0:5] =='DATEN':
                     #schnittstelle.sendall(str.encode(" Hier sind die Daten"))
-                    daten=sensoren_anfrage()
-                    schnittstelle.sendall(str.encode(daten))
+                    sensor_dht22=sensor_DHT22_anfrage()
+                    sensor_bmp180=sensor_BMP180_anfrage()
+                    schnittstelle.sendall(str.encode(sensor_dht22 +" " + sensor_bmp180))
 
 
                 # Abruch wenn AB gesendet wird vom client
