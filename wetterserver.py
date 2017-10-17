@@ -37,7 +37,7 @@ def sensor_BMP180_anfrage():
     
     # Abfrage der Sensordaten
     korrekturfaktor_d=1000
-    korrekturfaktor_t=-6    # mein Sensor zeigt 6 Kelvin zuviel an ;)
+    korrekturfaktor_t=-5    # mein Sensor zeigt 5 Kelvin zuviel an ;)
     temperatur = bmp.readTemperature()+korrekturfaktor_t
     luftdruck = bmp.readPressure()+korrekturfaktor_d
     hoehe = bmp.readAltitude(luftdruck)
@@ -55,7 +55,7 @@ def sensor_BMP180_anfrage():
 def sensor_DHT22_anfrage():
     sensor=Adafruit_DHT.DHT22
     gpio=17
-
+    korrekturfaktor_t=-5
     # Try to grab a sensor reading.  Use the read_retry method which will retry up
     # to 15 times to get a sensor reading (waiting 2 seconds between each retry). 
     luftfeuchte, temperature = Adafruit_DHT.read_retry(sensor, gpio)
@@ -124,7 +124,7 @@ def server_starten():
                     schnittstelle.sendall(str.encode(sensor_dht22 +" " + sensor_bmp180))
 
 
-                # Abruch wenn AB gesendet wird vom client
+                # Abbruch wenn AB gesendet wird vom client
                 if anfrage[0:2] == 'AB':
                     print("Verbindung wurde durch die Aufforderung des Client geschlosssen!")
                     schnittstelle.sendall(str.encode("Ende"))
