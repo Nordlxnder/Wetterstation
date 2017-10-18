@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*
 
 
+
+
 '''
     
     Funktion Wetterstation:
@@ -21,8 +23,13 @@
 
 import socket
 import sys
+import subprocess
+import re
+import time
 import Adafruit_DHT
 from Adafruit.Adafruit_BMP180 import BMP085
+
+
     
 def sensor_BMP180_anfrage():
     # Initialise the BMP085 and use STANDARD mode (default value)
@@ -77,17 +84,20 @@ def server_starten():
 
     # prüfen ob die Netzwerkkarte schon aktive ist und auslesen der IP Adresse
     for x in range(0,2):
-        try:
             #ausgabe = subprocess.check_output("ip -f inet addr show dev enp2s0|awk '/inet/ '", shell=True)
-            ausgabe = subprocess.check_output("ip -f inet addr show dev wlan0| awk -F ' *|:' '/inet/'", shell=True)
+        ausgabe = subprocess.check_output("ip -f inet addr show dev wlan0| awk -F ' *|:' '/inet/'", shell=True)
+        try:
             suchfilter=r'.*?inet\ (.*?)/'
             HOST_IP=re.findall(suchfilter,ausgabe.decode())[0]
-            #print((ip[0]))
             break
-        except subprocess.CalledProcessError as e:
-            print(e)
+        except IndexError as e:
             time.sleep(10)
             continue
+        #except subprocess.CalledProcessError as e:
+            # in Logdatei schreiben
+            #p rint(e,"Test:\t", x)
+        #    time.sleep(10)
+        #    continue
         pass
 
     # Einstellung für die Schnittstelle AF_INET= IPv4, Sock_STREAM = TCP
@@ -98,7 +108,12 @@ def server_starten():
         # das SO_REUSEADDR-Flag sagt dem Kernel, einen lokalen Socket im TIME_WAIT-Zustand wiederzuverwenden,
         # ohne darauf zu warten, dass sein natürliches Timeout abläuft
         netzwerkschnittstelle.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        netzwerkschnittstelle.bind((HOST_IP, PORT))
+        try:
+            netzwerkschnittstelle.bind((HOST_IP, PORT))
+        except OSError as error:
+           print("Dienst Wetterstation ist schon gestartet") 
+           #[Errno 98] Address already in use
+
         netzwerkschnittstelle.listen(1)
         print("Warten auf eine Verbindung.")
 
