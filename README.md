@@ -85,3 +85,53 @@
 
     und wieder ins Projektverzeichnis wechseln
 
+ Pythonskript als systemd Service starten unter Arch Linux
+
+    cd /usr/bin
+
+    nano wetterstationstart.sh
+
+        #!/bin/bash
+        # Pfad zum Skript angeben
+        python /home/BenutzerXY/Wetterstation/wetterserver.py
+        echo "Start der Wetterstation: $(date)" >> /var/log/wetterstation.log
+
+
+    nano wetterstationstop.sh
+
+        #!/bin/bash
+        echo "Stopp der Wetterstation: $(date)" >> /var/log/wetterstation.log
+
+    cd /etc/systemd/system
+
+    nano wetterstation.service
+
+
+            #########################################################################
+            #
+            # wetterstation.service
+            # systemd service: aktivieren der Wetterstation beim Start des PCs
+            #
+            #########################################################################
+
+            [Unit]
+            Description=Wetterstation
+            #After=network.target
+            After=netctl@Rheinblick3.service
+
+            [Service]
+            Type=simple
+            User=root
+            ExecStart=/usr/bin/wetterstationstart.sh &
+            ExecStop=/usr/bin/wetterstationstop.sh
+            Restart=on-abort
+
+            [Install]
+            WantedBy=multi-user.target
+
+            # EOF
+
+    systemctl start wetterstation.service
+    systemctl enable wetterstation.service
+
+
