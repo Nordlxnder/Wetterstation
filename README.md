@@ -105,7 +105,7 @@
         echo "Stopp der Wetterstation: $(date)" >> /var/log/wetterstation.log
 
 
-    chmod 744 wetterstation*.sh
+    chmod 755 wetterstation*.sh
 
     cd /etc/systemd/system
 
@@ -136,7 +136,7 @@
 
             # EOF
 
-
+    chmod 644 wetterstation.service
     systemctl start wetterstation.service
     systemctl enable wetterstation.service
 
