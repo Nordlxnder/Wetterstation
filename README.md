@@ -85,7 +85,7 @@
 
     und wieder ins Projektverzeichnis wechseln
 
- Pythonskript als systemd Service starten unter Arch Linux
+ Pythonskript als systemd Service starten unter Arch Linux (als root ausführen)
 
     cd /usr/bin
 
