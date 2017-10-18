@@ -91,6 +91,7 @@
 
     nano wetterstationstart.sh
 
+
         #!/bin/bash
         # Pfad zum Skript angeben
         python /home/BenutzerXY/Wetterstation/wetterserver.py
@@ -99,8 +100,12 @@
 
     nano wetterstationstop.sh
 
+
         #!/bin/bash
         echo "Stopp der Wetterstation: $(date)" >> /var/log/wetterstation.log
+
+
+    chmod 744 wetterstation*.sh
 
     cd /etc/systemd/system
 
@@ -130,6 +135,7 @@
             WantedBy=multi-user.target
 
             # EOF
+
 
     systemctl start wetterstation.service
     systemctl enable wetterstation.service
