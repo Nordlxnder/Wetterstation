@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*
 
-
-
-
 '''
     
     Funktion Wetterstation:
@@ -29,8 +26,6 @@ import time
 import Adafruit_DHT
 from Adafruit.Adafruit_BMP180 import BMP085
 
-
-    
 def sensor_BMP180_anfrage():
     # Initialise the BMP085 and use STANDARD mode (default value)
     # bmp = BMP085(0x77, debug=True)
@@ -84,21 +79,15 @@ def server_starten():
 
     # prüfen ob die Netzwerkkarte schon aktive ist und auslesen der IP Adresse
     for x in range(0,2):
-            #ausgabe = subprocess.check_output("ip -f inet addr show dev enp2s0|awk '/inet/ '", shell=True)
         ausgabe = subprocess.check_output("ip -f inet addr show dev wlan0| awk -F ' *|:' '/inet/'", shell=True)
         try:
+            # Ermitteln der IP Adresse  (Stingoperation)
             suchfilter=r'.*?inet\ (.*?)/'
             HOST_IP=re.findall(suchfilter,ausgabe.decode())[0]
             break
         except IndexError as e:
             time.sleep(10)
             continue
-        #except subprocess.CalledProcessError as e:
-            # in Logdatei schreiben
-            #p rint(e,"Test:\t", x)
-        #    time.sleep(10)
-        #    continue
-        pass
 
     # Einstellung für die Schnittstelle AF_INET= IPv4, Sock_STREAM = TCP
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as netzwerkschnittstelle:
@@ -115,7 +104,7 @@ def server_starten():
            #[Errno 98] Address already in use
 
         netzwerkschnittstelle.listen(1)
-        print("Warten auf eine Verbindung.")
+        #print("Warten auf eine Verbindung.")
 
         # schnittstelle ist ein Objekt zum empfangen und senden von Daten
         # addr ist die Adressen des anderen PC
@@ -125,33 +114,25 @@ def server_starten():
         stop_server=False
 
         with schnittstelle:
+            # Begrüßung
             schnittstelle.send(str.encode("Willkommen auf der Wetterstation! \n"))
             print("Verbunden wurde mit: ", str(addr[0]) + ":" + str(addr[1]) + " hergestellt!" )
+
             while True:
                 anfrage_empfangen = schnittstelle.recv(2048)
-                '''
-                # wenn der Server über Telnet angesprochen wird
-                try:
-                    daten_senden = "Antwort des Servers: " + daten_empfangen.decode('utf-8')
-
-                # Wenn ein strg-c gesendet wird die Verbindung getrennt
-                # der Server läuft aber weiter
-                except UnicodeDecodeError:
-                    print("Verbindung wurde durch ungültige Zeichen ^C  vom Client geschlossen!")
-                    break
-
-                schnittstelle.sendall(str.encode(daten_senden))
-                '''
-
                 anfrage = str(anfrage_empfangen.decode('utf-8'))
-
+                '''
+                    Die Schnittstelle unterstützt 3 Funktionen
+                    1 Anfragen der Sensordaten
+                    2 Abbruch der Verbindung zwisch Server und Client
+                    3 Stop der Servers
+                '''
                 # Daten senden wenn danach gefragt wird
                 if anfrage[0:5] =='DATEN':
                     #schnittstelle.sendall(str.encode(" Hier sind die Daten"))
                     sensor_dht22=sensor_DHT22_anfrage()
                     sensor_bmp180=sensor_BMP180_anfrage()
                     schnittstelle.sendall(str.encode(sensor_dht22 +" " + sensor_bmp180))
-
 
                 # Abbruch wenn AB gesendet wird vom client
                 if anfrage[0:2] == 'AB':
