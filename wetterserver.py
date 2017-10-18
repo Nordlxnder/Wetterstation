@@ -71,10 +71,24 @@ def sensor_DHT22_anfrage():
     pass
 
 def server_starten():
-
-    #HOST_IP = "127.0.0.1"
-    HOST_IP="192.168.2.135"
+    # HOST_IP = "127.0.0.1"
+    #HOST_IP = "192.168.2.135"
     PORT = 55252
+
+    # prüfen ob die Netzwerkkarte schon aktive ist und auslesen der IP Adresse
+    for x in range(0,2):
+        try:
+            #ausgabe = subprocess.check_output("ip -f inet addr show dev enp2s0|awk '/inet/ '", shell=True)
+            ausgabe = subprocess.check_output("ip -f inet addr show dev wlan0| awk -F ' *|:' '/inet/'", shell=True)
+            suchfilter=r'.*?inet\ (.*?)/'
+            HOST_IP=re.findall(suchfilter,ausgabe.decode())[0]
+            #print((ip[0]))
+            break
+        except subprocess.CalledProcessError as e:
+            print(e)
+            time.sleep(10)
+            continue
+        pass
 
     # Einstellung für die Schnittstelle AF_INET= IPv4, Sock_STREAM = TCP
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as netzwerkschnittstelle:
