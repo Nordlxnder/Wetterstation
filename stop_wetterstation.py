@@ -32,7 +32,8 @@ def stop_server():
     # sendet der Befehls zum Stoppen
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as netzwerkschnittstelle:
-            netzwerkschnittstelle.connect((str(HOST_IP), PORT))
+
+            netzwerkschnittstelle.connect((str(HOST_IP[0]), PORT))
             # Stop
             stop_wetterstation = "Stop"
             netzwerkschnittstelle.sendall(str.encode(stop_wetterstation))
