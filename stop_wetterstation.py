@@ -22,8 +22,8 @@ def stop_server():
     PORT = 55252  # Port des Servers für
 
     # aktuelle IP adresse ermittel
-    #ausgabe = subprocess.check_output("ip -f inet addr show dev wlan0| awk -F ' *|:' '/inet/'", shell=True)
-    ausgabe = subprocess.check_output("ip -f inet addr show dev enp2s0| awk -F ' *|:' '/inet/'", shell=True)
+    ausgabe = subprocess.check_output("ip -f inet addr show dev wlan0| awk -F ' *|:' '/inet/'", shell=True)
+    #ausgabe = subprocess.check_output("ip -f inet addr show dev enp2s0| awk -F ' *|:' '/inet/'", shell=True)
     suchfilter = r'.*?inet\ (.*?)/'
     HOST_IP = re.findall(suchfilter, ausgabe.decode())
 
