@@ -25,14 +25,14 @@ def stop_server():
     #ausgabe = subprocess.check_output("ip -f inet addr show dev wlan0| awk -F ' *|:' '/inet/'", shell=True)
     ausgabe = subprocess.check_output("ip -f inet addr show dev enp2s0| awk -F ' *|:' '/inet/'", shell=True)
     suchfilter = r'.*?inet\ (.*?)/'
-    HOST_IP = re.findall(suchfilter, ausgabe.decode())[0]
+    HOST_IP = re.findall(suchfilter, ausgabe.decode())
 
     print(HOST_IP)
 
     # sendet der Befehls zum Stoppen
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as netzwerkschnittstelle:
-            netzwerkschnittstelle.connect((HOST_IP, PORT))
+            netzwerkschnittstelle.connect((str(HOST_IP), PORT))
             # Stop
             stop_wetterstation = "Stop"
             netzwerkschnittstelle.sendall(str.encode(stop_wetterstation))
