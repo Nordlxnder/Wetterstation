@@ -12,7 +12,6 @@
         Dieses Script  wird dann in der Shell für den Stop des Services mit aufgerufen damit alle Prozesse
         sauber beendet werden.
 
-
 '''
 
 import socket ,subprocess, re
@@ -23,16 +22,14 @@ def stop_server():
 
     # aktuelle IP adresse ermittel
     ausgabe = subprocess.check_output("ip -f inet addr show dev wlan0| awk -F ' *|:' '/inet/'", shell=True)
-    #ausgabe = subprocess.check_output("ip -f inet addr show dev enp2s0| awk -F ' *|:' '/inet/'", shell=True)
     suchfilter = r'.*?inet\ (.*?)/'
     HOST_IP = re.findall(suchfilter, ausgabe.decode())
-
-    print(HOST_IP)
+    #print(HOST_IP)
 
     # sendet der Befehls zum Stoppen
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as netzwerkschnittstelle:
-
+            # Verbindet sich mit dem Dienst auf dem Port 55252
             netzwerkschnittstelle.connect((str(HOST_IP[0]), PORT))
             # Stop
             stop_wetterstation = "Stop"
@@ -41,12 +38,7 @@ def stop_server():
     except OSError as error:
         print("Dienst Wetterstation ist schon beendet!")
         print(error)
-
     pass
 
-
 if __name__ == "__main__":
-    try:
-        stop_server()
-    except ConnectionRefusedError as e:
-        print("Fehlermeldung",e)
+    stop_server()
