@@ -36,6 +36,7 @@ def stop_server():
             # Stop
             stop_wetterstation = "Stop"
             netzwerkschnittstelle.sendall(str.encode(stop_wetterstation))
+            print("Die Wetterstation wurde beendet durch das Skript stop_wetterstation.py")
     except OSError as error:
         print("Dienst Wetterstation ist schon beendet!")
         print(error)

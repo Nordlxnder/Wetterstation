@@ -144,6 +144,7 @@ def server_starten():
 
                 if anfrage[0:4]== "Stop":
                     stop_server=True
+                    print("Die Wetterstation wurde beendet durch den Stopbefehl vom client!")
                     break
             # Schleifenende
 
