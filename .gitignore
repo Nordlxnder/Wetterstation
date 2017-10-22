@@ -4,3 +4,5 @@ __pychache__/
 Adafruit/__pycache__/
 Adafruit_BMP085_example.py
 Netzwerktest.py
+test*
+*.log

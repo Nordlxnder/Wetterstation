@@ -99,8 +99,10 @@ def server_starten():
         netzwerkschnittstelle.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:
             netzwerkschnittstelle.bind((HOST_IP, PORT))
+
         except OSError as error:
-           print("Dienst Wetterstation ist schon gestartet") 
+           print("Dienst Wetterstation ist schon gestartet")
+           print(error)
            #[Errno 98] Address already in use
 
         netzwerkschnittstelle.listen(1)

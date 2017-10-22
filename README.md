@@ -15,6 +15,14 @@
                                                   |------------------------------|
 
 
+ Installation
+
+    cd /
+    sudo git clone https://github.com/Nordlxnder/Wetterstation.git
+    # BenutzerXY  bitte ersetzen durch deinen Benutzer
+    sudo chown --recursiv BenutzerXY:users /Wetterstation
+
+
  wetterserver.py
 
 

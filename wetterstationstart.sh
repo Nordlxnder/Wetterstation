@@ -1,4 +1,4 @@
 #!/bin/bash
 
-python /home/golfo/Wetterstation/wetterserver.py
+python /Wetterstation/wetterserver.py
 echo "Start der Wetterstation: $(date)" >> /var/log/wetterstation.log
