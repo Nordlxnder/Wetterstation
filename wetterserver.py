@@ -134,7 +134,7 @@ def server_starten():
                     tempsensor='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(sensor_dht22[1],
                                                                                      sensor_dht22[0])
                     sensor_bmp180=sensor_BMP180_anfrage()
-                    korrekturfaktor_d = 1000
+                    korrekturfaktor_d = 10
                     drucksensor= 'Temperatur={0:0.1f}°C  Luftdruck={1:0.1f}hPa ' \
                                  'Höhe={2:0.1f}m'.format(sensor_bmp180[0],
                                                         (sensor_bmp180[1] / 100+korrekturfaktor_d),
