@@ -57,7 +57,7 @@ def sensor_BMP180_anfrage():
 def sensor_DHT22_anfrage():
     sensor=Adafruit_DHT.DHT22
     gpio=17
-    korrekturfaktor_t=-3
+    korrekturfaktor_t=-5
     korrekturfaktor_lf=20
     # Try to grab a sensor reading.  Use the read_retry method which will retry up
     # to 15 times to get a sensor reading (waiting 2 seconds between each retry). 
