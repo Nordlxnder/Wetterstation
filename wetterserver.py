@@ -38,14 +38,13 @@ def sensor_BMP180_anfrage():
     # bmp = BMP085(0x77, 3)  # ULTRAHIRES Mode
     
     # Abfrage der Sensordaten
-    korrekturfaktor_d=1000
-    korrekturfaktor_t=-5   # mein Sensor zeigt 8 Kelvin zuviel an ;)
-    temperatur = bmp.readTemperature()+korrekturfaktor_t
-    luftdruck = bmp.readPressure()+korrekturfaktor_d
+    #
+    #korrekturfaktor_t=-5   # mein Sensor zeigt 8 Kelvin zuviel an ;)
+    temperatur = bmp.readTemperature()#+korrekturfaktor_t
+    luftdruck = bmp.readPressure()#+korrekturfaktor_d
     hoehe = bmp.readAltitude(luftdruck)
     
     if luftdruck is not None and temperatur is not None and hoehe is not None:
-        #daten='Temperatur={0:0.1f}°C  Luftdruck={1:0.1f}hPa Höhe={2:0.1f}m'.format(temperatur,  (luftdruck/100) , hoehe)
         daten=[temperatur,luftdruck,hoehe]
     else:
         daten='Sensoren auslesen ist fehlgeschlagen'
@@ -65,8 +64,6 @@ def sensor_DHT22_anfrage():
 
     if luftfeuchte is not None and temperature is not None:
         daten = [luftfeuchte ,temperature]
-        #daten='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(temperature, luftfeuchte)
-        #print('Temp={0:0.1f}°C  Humidity={1:0.1f}%'.format(temperature, luftfeuchte))
     else:
         daten='Sensoren auslesen ist fehlgeschlagen'
         print('Failed to get reading. Try again!')
@@ -137,9 +134,10 @@ def server_starten():
                     tempsensor='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(sensor_dht22[1],
                                                                                      sensor_dht22[0])
                     sensor_bmp180=sensor_BMP180_anfrage()
+                    korrekturfaktor_d = 1000
                     drucksensor= 'Temperatur={0:0.1f}°C  Luftdruck={1:0.1f}hPa ' \
                                  'Höhe={2:0.1f}m'.format(sensor_bmp180[0],
-                                                        (sensor_bmp180[1] / 100),
+                                                        (sensor_bmp180[1] / 100+korrekturfaktor_d),
                                                          sensor_bmp180[2])
 
                     schnittstelle.sendall(str.encode(tempsensor +" " + drucksensor))
