@@ -39,7 +39,7 @@ def sensor_BMP180_anfrage():
     
     # Abfrage der Sensordaten
     korrekturfaktor_d=1000
-    korrekturfaktor_t=-5    # mein Sensor zeigt 5 Kelvin zuviel an ;)
+    korrekturfaktor_t=-5   # mein Sensor zeigt 8 Kelvin zuviel an ;)
     temperatur = bmp.readTemperature()+korrekturfaktor_t
     luftdruck = bmp.readPressure()+korrekturfaktor_d
     hoehe = bmp.readAltitude(luftdruck)
