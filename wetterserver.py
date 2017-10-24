@@ -131,8 +131,10 @@ def server_starten():
                 if anfrage[0:5] =='DATEN':
                     #schnittstelle.sendall(str.encode(" Hier sind die Daten"))
                     sensor_dht22=sensor_DHT22_anfrage()
-                    tempsensor='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(sensor_dht22[1],
-                                                                                     sensor_dht22[0])
+                    korr_lf=20
+                    korr_t=-5
+                    tempsensor='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(sensor_dht22[1]+korr_t,
+                                                                                     sensor_dht22[0]+korr_lf)
                     sensor_bmp180=sensor_BMP180_anfrage()
                     drucksensor= 'Temperatur={0:0.1f}°C  Luftdruck={1:0.1f}hPa ' \
                                  'Höhe={2:0.1f}m'.format(sensor_bmp180[0],
