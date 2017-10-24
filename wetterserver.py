@@ -57,11 +57,13 @@ def sensor_BMP180_anfrage():
 def sensor_DHT22_anfrage():
     sensor=Adafruit_DHT.DHT22
     gpio=17
-    korrekturfaktor_t=-5
+    korrekturfaktor_t=-3
+    korrekturfaktor_lf=20
     # Try to grab a sensor reading.  Use the read_retry method which will retry up
     # to 15 times to get a sensor reading (waiting 2 seconds between each retry). 
     luftfeuchte, temperature = Adafruit_DHT.read_retry(sensor, gpio)
-
+    temperature=temperature+korrekturfaktor_t
+    luftfeuchte=luftfeuchte+korrekturfaktor_lf
     if luftfeuchte is not None and temperature is not None:
         daten='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(temperature, luftfeuchte)
         print('Temp={0:0.1f}°C  Humidity={1:0.1f}%'.format(temperature, luftfeuchte))
