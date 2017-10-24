@@ -45,7 +45,8 @@ def sensor_BMP180_anfrage():
     hoehe = bmp.readAltitude(luftdruck)
     
     if luftdruck is not None and temperatur is not None and hoehe is not None:
-        daten='Temperatur={0:0.1f}°C  Luftdruck={1:0.1f}hPa Höhe={2:0.1f}m'.format(temperatur, (luftdruck/100) , hoehe)
+        #daten='Temperatur={0:0.1f}°C  Luftdruck={1:0.1f}hPa Höhe={2:0.1f}m'.format(temperatur,  (luftdruck/100) , hoehe)
+        daten=[temperatur,luftdruck,hoehe]
     else:
         daten='Sensoren auslesen ist fehlgeschlagen'
         print('Failed to get reading. Try again!')
@@ -57,16 +58,15 @@ def sensor_BMP180_anfrage():
 def sensor_DHT22_anfrage():
     sensor=Adafruit_DHT.DHT22
     gpio=17
-    korrekturfaktor_t=-5
-    korrekturfaktor_lf=20
+
     # Try to grab a sensor reading.  Use the read_retry method which will retry up
     # to 15 times to get a sensor reading (waiting 2 seconds between each retry). 
     luftfeuchte, temperature = Adafruit_DHT.read_retry(sensor, gpio)
-    temperature=temperature+korrekturfaktor_t
-    luftfeuchte=luftfeuchte+korrekturfaktor_lf
+
     if luftfeuchte is not None and temperature is not None:
-        daten='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(temperature, luftfeuchte)
-        print('Temp={0:0.1f}°C  Humidity={1:0.1f}%'.format(temperature, luftfeuchte))
+        daten = [luftfeuchte ,temperature]
+        #daten='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(temperature, luftfeuchte)
+        #print('Temp={0:0.1f}°C  Humidity={1:0.1f}%'.format(temperature, luftfeuchte))
     else:
         daten='Sensoren auslesen ist fehlgeschlagen'
         print('Failed to get reading. Try again!')
@@ -75,8 +75,7 @@ def sensor_DHT22_anfrage():
     pass
 
 def server_starten():
-    # HOST_IP = "127.0.0.1"
-    #HOST_IP = "192.168.2.135"
+
     PORT = 55252
 
     # prüfen ob die Netzwerkkarte schon aktive ist und auslesen der IP Adresse
@@ -135,8 +134,15 @@ def server_starten():
                 if anfrage[0:5] =='DATEN':
                     #schnittstelle.sendall(str.encode(" Hier sind die Daten"))
                     sensor_dht22=sensor_DHT22_anfrage()
+                    tempsensor='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(sensor_dht22[1],
+                                                                                     sensor_dht22[0])
                     sensor_bmp180=sensor_BMP180_anfrage()
-                    schnittstelle.sendall(str.encode(sensor_dht22 +" " + sensor_bmp180))
+                    drucksensor= 'Temperatur={0:0.1f}°C  Luftdruck={1:0.1f}hPa ' \
+                                 'Höhe={2:0.1f}m'.format(sensor_bmp180[0],
+                                                        (sensor_bmp180[1] / 100),
+                                                         sensor_bmp180[2])
+
+                    schnittstelle.sendall(str.encode(tempsensor +" " + drucksensor))
 
                 # Abbruch wenn AB gesendet wird vom client
                 if anfrage[0:2] == 'AB':
