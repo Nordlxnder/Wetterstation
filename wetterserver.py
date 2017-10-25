@@ -143,11 +143,13 @@ def server_starten():
                                                          sensor_bmp180[2])
 
                     schnittstelle.sendall(str.encode(tempsensor +" " + drucksensor))
+                    print("Daten")
                 if anfrage[0:9] =='MESSDATEN':
                     #schnittstelle.sendall(str.encode(" Hier sind die Daten"))
                     sensor_dht22=sensor_DHT22_anfrage()
                     sensor_bmp180=sensor_BMP180_anfrage()
                     schnittstelle.sendall(str.encode(sensor_dht22,sensor_bmp180))
+                    print("Messdaten")
                 # Abbruch wenn AB gesendet wird vom client
                 if anfrage[0:2] == 'AB':
                     print("Verbindung wurde durch die Aufforderung des Client geschlosssen!")
