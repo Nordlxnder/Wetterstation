@@ -34,34 +34,6 @@ class messdaten_abfragen():
         daten_empfangen = self.netzwerkschnittstelle.recv(1024)
         print("Abschlußmeldung:\t", daten_empfangen.decode('utf-8'))
 
-def client_starten():
-    HOST = '192.168.2.135'  # Zielrechner
-    PORT = 55252  # Port des Servers für
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as netzwerkschnittstelle:
-        netzwerkschnittstelle.connect((HOST, PORT))
-
-        # Begrüßung empfangen
-        daten_empfangen = netzwerkschnittstelle.recv(1024)
-        print(daten_empfangen.decode('utf-8'))
-
-        # Messdaten anfordern
-        daten_anfordern="MESSDATEN"
-        netzwerkschnittstelle.sendall(str.encode(daten_anfordern))
-
-        daten_empfangen = netzwerkschnittstelle.recv(1024)
-        print("Empfangene Daten:\t", daten_empfangen.decode('utf-8'))
-
-        # Verbindung beenden bzw abbrechen
-        daten_senden = "AB"
-        netzwerkschnittstelle.sendall(str.encode(daten_senden))
-
-        daten_empfangen = netzwerkschnittstelle.recv(1024)
-        print("Abschlußmeldung:\t", daten_empfangen.decode('utf-8'))
-
-
-    pass
-
-
 if __name__ == "__main__":
     try:
         #client_starten()

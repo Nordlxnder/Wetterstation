@@ -129,7 +129,7 @@ def server_starten():
                 '''
                 # Daten senden wenn danach gefragt wird
                 if anfrage[0:5] =='DATEN':
-                    #schnittstelle.sendall(str.encode(" Hier sind die Daten"))
+                    ''' Hier werden die Messdaten in lesebarer From und deren Bedeutung gesendet'''
                     sensor_dht22=sensor_DHT22_anfrage()
                     korr_lf=20
                     korr_t=-5
@@ -145,7 +145,7 @@ def server_starten():
                     schnittstelle.sendall(str.encode(tempsensor +" " + drucksensor))
 
                 if anfrage[0:9] =='MESSDATEN':
-                    #schnittstelle.sendall(str.encode(" Hier sind die Daten"))
+                    ''' hier werden die die Rohmessdaten gesendet'''
                     sensor_dht22=sensor_DHT22_anfrage()
                     sensor_bmp180=sensor_BMP180_anfrage()
                     schnittstelle.sendall(str.encode(str(sensor_dht22[0])
