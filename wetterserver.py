@@ -148,7 +148,7 @@ def server_starten():
                     #schnittstelle.sendall(str.encode(" Hier sind die Daten"))
                     sensor_dht22=sensor_DHT22_anfrage()
                     sensor_bmp180=sensor_BMP180_anfrage()
-                    schnittstelle.sendall(str.encode(sensor_dht22,sensor_bmp180))
+                    schnittstelle.sendall(str.encode(str(sensor_dht22)+","+str(sensor_bmp180)))
                     print("Messdaten")
                 # Abbruch wenn AB gesendet wird vom client
                 if anfrage[0:2] == 'AB':

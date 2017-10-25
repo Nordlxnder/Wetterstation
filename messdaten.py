@@ -23,7 +23,7 @@ class messdaten_abfragen():
         print(daten_empfangen.decode('utf-8'))
 
         # Messdaten anfordern
-        daten_anfordern="DATEN"
+        daten_anfordern="MESSDATEN"
         self.netzwerkschnittstelle.sendall(str.encode(daten_anfordern))
         daten_empfangen = self.netzwerkschnittstelle.recv(1024)
         print("Empfangene Daten:\t", daten_empfangen.decode('utf-8'))
