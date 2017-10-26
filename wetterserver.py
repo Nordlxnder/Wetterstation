@@ -28,7 +28,8 @@ from Adafruit.Adafruit_BMP180 import BMP085
 
 def cpu_temperatur():
     cpu_temp = subprocess.check_output("/opt/vc/bin/vcgencmd measure_temp", shell=True)
-    return cpu_temp
+    cpu_temp = cpu_temp.decode('utf-8').split('=')[1]
+    return cpu_temp[0:4]
 
 def sensor_BMP180_anfrage():
     # Initialise the BMP085 and use STANDARD mode (default value)
@@ -145,8 +146,9 @@ def server_starten():
                                  'Höhe={2:0.1f}m'.format(sensor_bmp180[0]+korr_t2,
                                                         (sensor_bmp180[1] / 100),
                                                          sensor_bmp180[2])
-                    cpu_temp=str(cpu_temperatur())
-                    schnittstelle.sendall(str.encode(tempsensor +" " + drucksensor+ " " + cpu_temp))
+                    cpu_temp = cpu_temperatur()
+                    cpu_temp = "CPU-Temperatur=" + cpu_temp + "°C"
+                    schnittstelle.sendall(str.encode(tempsensor + " " + drucksensor + " " + cpu_temp))
 
                 if anfrage[0:9] =='MESSDATEN':
                     ''' hier werden die die Rohmessdaten gesendet'''
