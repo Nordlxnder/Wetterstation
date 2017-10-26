@@ -26,6 +26,10 @@ import time
 import Adafruit_DHT
 from Adafruit.Adafruit_BMP180 import BMP085
 
+def cpu_temperatur():
+    cpu_temp = subprocess.check_output("/opt/vc/bin/vcgencmd measure_temp", shell=True)
+    return cpu_temp
+
 def sensor_BMP180_anfrage():
     # Initialise the BMP085 and use STANDARD mode (default value)
     # bmp = BMP085(0x77, debug=True)
@@ -131,8 +135,8 @@ def server_starten():
                 if anfrage[0:5] =='DATEN':
                     ''' Hier werden die Messdaten in lesebarer From und deren Bedeutung gesendet'''
                     sensor_dht22=sensor_DHT22_anfrage()
-                    korr_lf=20
-                    korr_t=-5
+                    korr_lf=0
+                    korr_t=-0
                     tempsensor='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(sensor_dht22[1]+korr_t,
                                                                                      sensor_dht22[0]+korr_lf)
                     sensor_bmp180=sensor_BMP180_anfrage()
