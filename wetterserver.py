@@ -136,7 +136,7 @@ def server_starten():
                 if anfrage[0:5] =='DATEN':
                     ''' Hier werden die Messdaten in lesebarer From und deren Bedeutung gesendet'''
                     sensor_dht22=sensor_DHT22_anfrage()
-                    korr_lf=0
+                    korr_lf=7
                     korr_t=-0
                     tempsensor='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(sensor_dht22[1]+korr_t,
                                                                                      sensor_dht22[0]+korr_lf)
