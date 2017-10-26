@@ -145,8 +145,8 @@ def server_starten():
                                  'Höhe={2:0.1f}m'.format(sensor_bmp180[0]+korr_t2,
                                                         (sensor_bmp180[1] / 100),
                                                          sensor_bmp180[2])
-
-                    schnittstelle.sendall(str.encode(tempsensor +" " + drucksensor))
+                    cpu_temp=cpu_temperatur()
+                    schnittstelle.sendall(str.encode(tempsensor +" " + drucksensor+ " " + cpu_temp))
 
                 if anfrage[0:9] =='MESSDATEN':
                     ''' hier werden die die Rohmessdaten gesendet'''
