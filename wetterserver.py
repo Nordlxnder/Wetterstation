@@ -154,11 +154,13 @@ def server_starten():
                     ''' hier werden die die Rohmessdaten gesendet'''
                     sensor_dht22=sensor_DHT22_anfrage()
                     sensor_bmp180=sensor_BMP180_anfrage()
+                    cpu_temp = cpu_temperatur()
                     schnittstelle.sendall(str.encode(str(sensor_dht22[0])
                                                      +"|"+str(sensor_dht22[1])
                                                      +"|"+str(sensor_bmp180[0])
                                                      +"|"+str(sensor_bmp180[1])
-                                                     +"|"+str(sensor_bmp180[2])))
+                                                     +"|"+str(sensor_bmp180[2])
+                                                     +"|"+str(cpu_temp)))
 
                 # Abbruch wenn AB gesendet wird vom client
                 if anfrage[0:2] == 'AB':
