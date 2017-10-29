@@ -39,9 +39,9 @@ def temperaturanzeige():
         messdaten=client_starten()
         luftfeuchte, Aussentemperatur, temp2, luftdruck, hoehe,cputemp=messdaten.split("|")
         # Formatierung
-        Aussentemperatur="Aussentemp: {0:.1f}°C\n".format(float(Aussentemperatur)).replace(".",",")
-        luftfeuchte="Luftfeuchte: {0:.1f}%".format(float(luftfeuchte)).replace(".",",")
-        luftdruck="Luftdruck: {0:.0f}hPa".format(float(luftdruck)/100).replace(".",",")
+        Aussentemperatur="Aussentemp: {0:.1f}°C ".format(float(Aussentemperatur)).replace(".",",")
+        luftfeuchte="Luftfeuchte: {0:.1f}% ".format(float(luftfeuchte)).replace(".",",")
+        luftdruck="Luftdruck: {0:.0f}hPa ".format(float(luftdruck)/100).replace(".",",")
         print(Aussentemperatur, luftfeuchte, luftdruck)
     except ConnectionRefusedError as e:
         print("Fehlermeldung",e)
