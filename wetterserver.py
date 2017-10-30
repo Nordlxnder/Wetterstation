@@ -1,30 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*
 
-'''
-    
-    Funktion Wetterstation:
-                  - auslesen der Temperatur, Luftdruck, Höhe und Luftfeuchte
-                  - Server um die Werte im Netzwerk bereit zustellen
-                 
-    Hardwarevoraussetzungen:
-            Raspberry zero über WLAN mit dem Netzwerk verbunden
-            Sensor  DHT 22  mit Pin 11 GPIO 17 verbunden
-            Sensor  BMP180              
-
-    Softwarevoraussetzungen:
-        Treiber für Sensor installiert
-        Python 3.6 installiert                
-        i2c-tools    
-'''
-
 import socket
 import sys
 import subprocess
 import re
-import time
+import time ,threading
 import Adafruit_DHT
 from Adafruit.Adafruit_BMP180 import BMP085
+
+exitFlag = 0
+messdaten="0|0|0|0|0|0"
 
 def cpu_temperatur():
     cpu_temp = subprocess.check_output("/opt/vc/bin/vcgencmd measure_temp", shell=True)
@@ -34,46 +20,61 @@ def cpu_temperatur():
 def sensor_BMP180_anfrage():
     # Initialise the BMP085 and use STANDARD mode (default value)
     # bmp = BMP085(0x77, debug=True)
-    bmp = BMP085(0x77,1)
+    bmp = BMP085(0x77, 1)
 
     # To specify a different operating mode, uncomment one of the following:
     # bmp = BMP085(0x77, 0)  # ULTRALOWPOWER Mode
     # bmp = BMP085(0x77, 1)  # STANDARD Mode
     # bmp = BMP085(0x77, 2)  # HIRES Mode
     # bmp = BMP085(0x77, 3)  # ULTRAHIRES Mode
-    
+
     # Abfrage der Sensordaten
-    korrekturfaktor_d=1000
-    #korrekturfaktor_t=-5   # mein Sensor zeigt 8 Kelvin zuviel an ;)
-    temperatur = bmp.readTemperature()#+korrekturfaktor_t
-    luftdruck = bmp.readPressure()+korrekturfaktor_d
+    korrekturfaktor_d = 1000
+    # korrekturfaktor_t=-5   # mein Sensor zeigt 8 Kelvin zuviel an ;)
+    temperatur = bmp.readTemperature()  # +korrekturfaktor_t
+    luftdruck = bmp.readPressure() + korrekturfaktor_d
     hoehe = bmp.readAltitude(luftdruck)
-    
+
     if luftdruck is not None and temperatur is not None and hoehe is not None:
-        daten=[temperatur,luftdruck,hoehe]
+        daten = [temperatur, luftdruck, hoehe]
     else:
-        daten='Sensoren auslesen ist fehlgeschlagen'
+        daten = 'Sensoren auslesen ist fehlgeschlagen'
         print('Failed to get reading. Try again!')
-        
+
     return daten
 
-    pass
-
 def sensor_DHT22_anfrage():
-    sensor=Adafruit_DHT.DHT22
-    gpio=17
+    sensor = Adafruit_DHT.DHT22
+    gpio = 17
 
     # Try to grab a sensor reading.  Use the read_retry method which will retry up
-    # to 15 times to get a sensor reading (waiting 2 seconds between each retry). 
+    # to 15 times to get a sensor reading (waiting 2 seconds between each retry).
     luftfeuchte, temperature = Adafruit_DHT.read_retry(sensor, gpio)
 
     if luftfeuchte is not None and temperature is not None:
-        daten = [luftfeuchte ,temperature]
+        daten = [luftfeuchte, temperature]
     else:
-        daten='Sensoren auslesen ist fehlgeschlagen'
+        daten = 'Sensoren auslesen ist fehlgeschlagen'
         print('Failed to get reading. Try again!')
-        #sys.exit(1)
+        # sys.exit(1)
     return daten
+
+def sensoren_auslesen():
+    global messdaten
+
+    while True:
+        ''' hier werden die die Rohmessdaten gesendet'''
+        cpu_temp = cpu_temperatur()
+        sensor_bmp180 = sensor_BMP180_anfrage()
+        sensor_dht22 = sensor_DHT22_anfrage()
+        # messdaten= luftfeuchte|temperature| temperature |luftdruck| hoehe| cputemperature
+        messdaten=(str(sensor_dht22[0])
+                   + "|" + str(sensor_dht22[1])
+                   + "|" + str(sensor_bmp180[0])
+                   + "|" + str(sensor_bmp180[1])
+                   + "|" + str(sensor_bmp180[2])
+                   + "|" + str(cpu_temp))
+        time.sleep(300)
     pass
 
 def server_starten():
@@ -97,7 +98,8 @@ def server_starten():
         # Bei wiederholten Start des Servers kann es zu dieser Fehlermeldung kommen
         # OSError: [Errno 98] Address already in use
         # Abhilfe schafft  das setzen dieses Flags.
-        # das SO_REUSEADDR-Flag sagt dem Kernel, einen lokalen Socket im TIME_WAIT-Zustand wiederzuverwenden,
+        # das SO_REUSEADDR-Flag sagt dem Kernel, einen lokalen Socket im
+        # TIME_WAIT-Zustand wiederzuverwenden,
         # ohne darauf zu warten, dass sein natürliches Timeout abläuft
         netzwerkschnittstelle.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:
@@ -129,38 +131,12 @@ def server_starten():
                 '''
                     Die Schnittstelle unterstützt 3 Funktionen
                     1 Anfragen der Sensordaten
-                    2 Abbruch der Verbindung zwisch Server und Client
+                    2 Abbruch der Verbindung zwischen Server und Client
                     3 Stop der Servers
                 '''
-                # Daten senden wenn danach gefragt wird
-                if anfrage[0:5] =='DATEN':
-                    ''' Hier werden die Messdaten in lesebarer From und deren Bedeutung gesendet'''
-                    sensor_dht22=sensor_DHT22_anfrage()
-                    korr_lf=7
-                    korr_t=-0
-                    tempsensor='Temperatur={0:0.1f}°C  Luftfeuchte={1:0.1f}%'.format(sensor_dht22[1]+korr_t,
-                                                                                     sensor_dht22[0]+korr_lf)
-                    sensor_bmp180=sensor_BMP180_anfrage()
-                    korr_t2=-7
-                    drucksensor= 'Temperatur={0:0.1f}°C  Luftdruck={1:0.1f}hPa ' \
-                                 'Höhe={2:0.1f}m'.format(sensor_bmp180[0]+korr_t2,
-                                                        (sensor_bmp180[1] / 100),
-                                                         sensor_bmp180[2])
-                    cpu_temp = cpu_temperatur()
-                    cpu_temp = "CPU-Temperatur=" + cpu_temp + "°C"
-                    schnittstelle.sendall(str.encode(tempsensor + " " + drucksensor + " " + cpu_temp))
 
                 if anfrage[0:9] =='MESSDATEN':
-                    ''' hier werden die die Rohmessdaten gesendet'''
-                    sensor_dht22=sensor_DHT22_anfrage()
-                    sensor_bmp180=sensor_BMP180_anfrage()
-                    cpu_temp = cpu_temperatur()
-                    schnittstelle.sendall(str.encode(str(sensor_dht22[0])
-                                                     +"|"+str(sensor_dht22[1])
-                                                     +"|"+str(sensor_bmp180[0])
-                                                     +"|"+str(sensor_bmp180[1])
-                                                     +"|"+str(sensor_bmp180[2])
-                                                     +"|"+str(cpu_temp)))
+                    schnittstelle.sendall(str.encode(str(messdaten)))
 
                 # Abbruch wenn AB gesendet wird vom client
                 if anfrage[0:2] == 'AB':
@@ -177,14 +153,52 @@ def server_starten():
             schnittstelle.close()
             return stop_server
 
+
+############# Threads ################################
+'''
+ Sensoren auslesen wir als eigener thread gestartet 
+ der alle 5 min die Sensoren abfragt
+ Der Server selbst wird in einer while schleife betrieben
+'''
+class sensoren (threading.Thread):
+   def __init__(self, name):
+      threading.Thread.__init__(self)
+      self.name = name
+
+   def run(self):
+      sensoren_auslesen()
+
+class meinServer(threading.Thread):
+    def __init__(self, name):
+        threading.Thread.__init__(self)
+        self.name = name
+
+    def run(self):
+        while True:
+            try:
+                stop = server_starten()
+                if stop == True:
+                    print("Server wurde vom client gestoppt")
+                    # Break beendet die Whileschleife
+                    break
+            except KeyboardInterrupt as e:
+                print("\tDas Programm wurde beendet." + str(e))
+                sys.exit()
+
+# Erzeugt die Jobs die parallel abgearbeitet werden sollen
+# thread 1
+sensordaten = sensoren("Sensoren")
+sensordaten.daemon=True
+# thread 2
+server=meinServer("Server")
+server.daemon=True
+
+# Start der neuen Threads
+sensordaten.start()
+server.start()
+
+sensordaten.join()
+server.start()
+
 if __name__ == "__main__":
-    while True:
-        try:
-            stop=server_starten()
-            if stop == True:
-                print("Server wurde vom client gestoppt")
-                # Break beendet die Whileschleife
-                break
-        except KeyboardInterrupt as e:
-            print("\tDas Programm wurde beendet." + str(e))
-            sys.exit()
+    pass

@@ -1,4 +1,3 @@
-test.py
 .idea/
 __pychache__/
 Adafruit/__pycache__/
@@ -6,3 +5,4 @@ Adafruit_BMP085_example.py
 Netzwerktest.py
 test*
 *.log
+Final1*
