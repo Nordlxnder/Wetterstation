@@ -52,7 +52,6 @@
     Softwarevoraussetzungen:
         Treiber für Sensor installiert Adafruit_Python_DHT
         Python 3.6 installiert
-        Python 2.7 (für die Installation von DHT22)
         i2c-tools
         base-devel (für Arch Linux)
 
@@ -92,8 +91,7 @@
     cd Adafruit_Python_DHT
 
 
-    sudo python2 setup.py install
-    ( nicht sudo python setup.py install ;)
+    sudo python setup.py install
 
 
     und wieder ins Projektverzeichnis wechseln
